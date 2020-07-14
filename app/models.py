@@ -18,6 +18,8 @@ class ShowManager(models.Manager):
       errors['title'] = 'Title must be 2 or more characters'
     elif len(title) > 255:
       errors['title'] = 'Title must be 255 or less characters'
+    elif len(Show.objects.filter(title=title)) > 0:
+      errors['title'] = 'Title already in database'
     if len(network) < 2:
       errors['network'] = 'Network must be 2 or more characters'
     elif len(network) > 255:
