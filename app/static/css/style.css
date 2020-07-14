@@ -3,7 +3,17 @@
 */
 
 /* HTML selector rules */
+form {
+  padding: 0 50px;
+}
 
+header {
+  padding: 15px 100px;
+}
+
+main {
+  padding: 50px;
+}
 
 /* Class rules */
 
