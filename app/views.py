@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.http import Http404
+from django.contrib import messages
 from datetime import datetime
 
 from app.models import Show
@@ -48,9 +49,14 @@ def edit_show(request, show_id):
 
 def create_show(request):
   if request.method == 'POST':
-    request, title, network, desc, release_date = check_inputs(request)
+    errors = Show.objects.basicValidator(request.POST)
 
-    if not 'error-msg' in request.session:
+    if len(errors) == 0:
+      title = request.POST['title'].title()
+      network = request.POST['network'].title()
+      desc = request.POST['desc'].capitalize()
+      release_date = datetime.strptime(
+        request.POST['release_date'], '%Y-%m-%d').date()
       new_show = Show.objects.create(
         title=title,
         network=network,
@@ -58,23 +64,29 @@ def create_show(request):
         description=desc
       )
       return redirect(reverse('app:view_show', args=(new_show.id,)))
+
+    for key, value in errors.items():
+      messages.error(request, value)
   return redirect(reverse('app:new_show'))
 
 def update_show(request, show_id):
   if request.method == 'POST':
-    request, title, network, desc, release_date = check_inputs(request)
+    errors = Show.objects.basicValidator(request.POST)
 
-    if not 'error-msg' in request.session:
+    if len(errors) == 0:
       try:
         show = Show.objects.get(id=show_id)
-        show.title = title
-        show.network = network
-        show.release_date = release_date
-        show.description = desc
-        show.save()
-        return redirect(reverse('app:view_show', args=(show_id,)))
       except Show.DoesNotExist:
         raise Http404('Show not found')
+      show.title = request.POST['title'].title()
+      show.network = request.POST['network'].title()
+      show.description = request.POST['desc'].capitalize()
+      show.release_date = datetime.strptime(
+        request.POST['release_date'], '%Y-%m-%d').date()
+      show.save()
+      return redirect(reverse('app:view_show', args=(show_id,)))
+    for key, value in errors.items():
+      messages.error(request, value)
   return redirect(reverse('app:edit_show'), args=(show_id,))
 
 def destroy_show(request, show_id):
@@ -83,20 +95,3 @@ def destroy_show(request, show_id):
   except Show.DoesNotExist:
     raise Http404('Show not found')
   return redirect('/')
-
-def check_inputs(request):
-  if 'error-msg' in request.session:
-    del request.session['error-msg']
-  title = request.POST['title']
-  network = request.POST['network']
-  desc = request.POST['desc']
-  try:
-    release_date = datetime.strptime(
-      request.POST['release_date'], '%Y-%m-%d').date()
-  except ValueError:
-    request.session['error-msg'] = 'Release date must be a date'
-  if len(title) < 2 or len(title) > 255:
-    request.session['error-msg'] = 'Title must be between 2 and 255 characters'
-  if len(network) < 2 or len(network) > 255:
-    request.session['error-msg'] = 'Network must be between 2 and 255 characters'
-  return (request, title, network, desc, release_date)

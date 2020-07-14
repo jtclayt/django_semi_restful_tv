@@ -1,4 +1,28 @@
 from django.db import models
+from datetime import datetime
+
+class ShowManager(models.Manager):
+  def basicValidator(self, postData):
+    errors = {}
+    title = postData['title']
+    network = postData['network']
+    desc = postData['desc']
+    try:
+      release_date = datetime.strptime(
+        postData['release_date'], '%Y-%m-%d').date()
+    except ValueError:
+      errors['date'] = 'Release date must be a date'
+    if len(title) < 2:
+      errors['title'] = 'Title must be 2 or more characters'
+    elif len(title) > 255:
+      errors['title'] = 'Title must be 255 or less characters'
+    if len(network) < 2:
+      errors['network'] = 'Network must be 2 or more characters'
+    elif len(network) > 255:
+      errors['network'] = 'Network must be 255 or less characters'
+    if len(desc) == 0:
+      errors['desc'] = 'Must provide a description'
+    return errors
 
 class Show(models.Model):
   title = models.CharField(max_length=255)
@@ -7,3 +31,4 @@ class Show(models.Model):
   description = models.TextField(null=True)
   created_at = models.DateTimeField(auto_now_add=True)
   updated_at = models.DateTimeField(auto_now=True)
+  objects = ShowManager()
