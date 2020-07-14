@@ -78,6 +78,10 @@ def update_show(request, show_id):
   return redirect(reverse('app:edit_show'), args=(show_id,))
 
 def delete_show(request, show_id):
+  try:
+    Show.objects.get(id=show_id).delete()
+  except Show.DoesNotExist:
+    raise Http404('Show not found')
   return redirect('/')
 
 def check_inputs(request):
@@ -89,7 +93,7 @@ def check_inputs(request):
   try:
     release_date = datetime.strptime(
       request.POST['release_date'], '%Y-%m-%d').date()
-  except Exception as e:
+  except ValueError:
     request.session['error-msg'] = 'Release date must be a date'
   if len(title) < 2 or len(title) > 255:
     request.session['error-msg'] = 'Title must be between 2 and 255 characters'
