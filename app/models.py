@@ -12,6 +12,8 @@ class ShowManager(models.Manager):
         postData['release_date'], '%Y-%m-%d').date()
     except ValueError:
       errors['date'] = 'Release date must be a date'
+    if release_date > datetime.now().date():
+      errors['date'] = 'Release date must be in the past'
     if len(title) < 2:
       errors['title'] = 'Title must be 2 or more characters'
     elif len(title) > 255:
