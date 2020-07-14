@@ -1,0 +1,42 @@
+<!--
+  Author: Justin Clayton
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shows</title>
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'css/normalize.css' %}">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link rel="stylesheet"
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+    integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
+    crossorigin="anonymous">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="{% static 'js/index.js' %}"></script>
+</head>
+<body>
+  <header class="bg-info">
+    <h1>
+      Semi-Restful TV Shows
+      <a class="btn btn-primary" href="/">Back to Shows</a>
+    </h1>
+  </header>
+  <main class="container bg-light text-center">
+    <h2>TV Show {{ show.id }}</h2>
+    <p>Title: {{ show.title }}</p>
+    <p>Network: {{ show.network }}</p>
+    <p>Release Date: {{ show.release_date }}</p>
+    <p>Description: {{ show.description }}</p>
+    <p>Last Updated: {{ show.updated_at }}</p>
+    <p>
+      <a href="{% url 'app:edit_show' show_id=show.id %}"
+        class="btn btn-warning">Edit</a>
+      <a href="{% url 'app:delete_show' show_id=show.id %}"
+        class="btn btn-danger">Delete</a>
+    </p>
+  </main>
+</body>
+</html>

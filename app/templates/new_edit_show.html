@@ -19,31 +19,52 @@
 </head>
 <body>
   <header class="bg-info">
-    <h1>Semi-Restful TV Shows</h1>
+    <h1>
+      Semi-Restful TV Shows
+      <a class="btn btn-primary" href="/">Back to Shows</a>
+    </h1>
   </header>
   <main class="container bg-light text-center">
+    {% if show_id %}
+    <h2>Edit TV Show {{ show_id }}</h2>
+    {% else %}
     <h2>Add a New Show</h2>
-    <form action="{% url 'app:create_show' %}" method="POST">{% csrf_token %}
+    {% endif %}
+    {% if 'error-msg' in request.session %}
+    <p class="text-danger">{{ request.session.error_msg }}</p>
+    {% endif %}
+    {% if show_id %}
+    <form action="{% url 'app:update_show' show_id=show_id %}" method="POST">
+    {% else %}
+    <form action="{% url 'app:create_show' %}" method="POST">
+    {% endif %}
+      {% csrf_token %}
       <div class="form-group">
         <label for="title">Title:</label>
         <input class="form-control" type="text" name="title" id="title"
-          minlength="2" maxlength="255" required>
+          minlength="2" maxlength="255" value='{{ title }}' required>
       </div>
       <div class="form-group">
         <label for="network">Network:</label>
         <input class="form-control" type="text" name="network" id="network"
-          minlength="2" maxlength="255" required>
+          minlength="2" maxlength="255" value='{{ network }}' required>
       </div>
       <div class="form-group">
         <label for="release">Release Date:</label>
         <input class="form-control" type="date" name="release_date"
-          id="release_date" required>
+          id="release_date" value='{{ release_date }}' required>
       </div>
       <div class="form-group">
         <label for="desc">Description:</label>
-        <textarea class="form-control" name="desc"></textarea>
+        <textarea class="form-control" name="desc">{{ description }}</textarea>
       </div>
-      <button type="submit" class="btn btn-primary">Create Show</button>
+      <button type="submit" class="btn btn-primary">
+        {% if show_id %}
+        Update
+        {% else %}
+        Create Show
+        {% endif %}
+      </button>
     </form>
   </main>
 </body>
