@@ -77,7 +77,7 @@ def update_show(request, show_id):
         raise Http404('Show not found')
   return redirect(reverse('app:edit_show'), args=(show_id,))
 
-def delete_show(request, show_id):
+def destroy_show(request, show_id):
   try:
     Show.objects.get(id=show_id).delete()
   except Show.DoesNotExist:

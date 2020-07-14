@@ -44,7 +44,7 @@
             <a class="btn btn-warning"
               href="{% url 'app:edit_show' show_id=show.id%}">Edit</a>
             <a class="btn btn-danger"
-              href="{% url 'app:delete_show' show_id=show.id%}">Delete</a>
+              href="{% url 'app:destroy_show' show_id=show.id%}">Delete</a>
           </td>
         </tr>
         {% endfor %}
