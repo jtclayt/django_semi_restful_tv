@@ -5,6 +5,7 @@
 /* HTML selector rules */
 form {
   padding: 0 50px;
+  margin-bottom: 15px;
 }
 
 h1 {

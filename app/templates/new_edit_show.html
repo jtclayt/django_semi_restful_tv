@@ -6,7 +6,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  {% if show_id %}
+  <title>Edit Show {{ show_id }}</title>
+  {% else %}
   <title>New Show</title>
+  {% endif %}
   {% load static %}
   <link rel="stylesheet" href="{% static 'css/normalize.css' %}">
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
@@ -58,7 +62,7 @@
         <label for="desc">Description:</label>
         <textarea class="form-control" name="desc">{{ description }}</textarea>
       </div>
-      <button type="submit" class="btn btn-primary">
+      <button type="submit" class="btn btn-success">
         {% if show_id %}
         Update
         {% else %}
@@ -66,6 +70,10 @@
         {% endif %}
       </button>
     </form>
+    {% if show_id %}
+    <a href="{% url 'app:view_show' show_id=show_id %}"
+      class="btn btn-primary">Show</a>
+    {% endif %}
   </main>
 </body>
 </html>
