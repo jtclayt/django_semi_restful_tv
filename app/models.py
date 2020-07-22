@@ -20,7 +20,8 @@ class ShowManager(models.Manager):
         elif len(title) > 255:
             errors['title'] = 'Title must be 255 or less characters'
         elif len(Show.objects.filter(title=title)) > 0:
-            if (not show_id) or (Show.objects.get(id=show_id).title != title):
+            is_same_title = Show.objects.get(id=show_id).title != title.title()
+            if (not show_id) or is_same_title:
                 errors['title'] = 'Title already in database'
         if len(network) < 2:
             errors['network'] = 'Network must be 2 or more characters'
